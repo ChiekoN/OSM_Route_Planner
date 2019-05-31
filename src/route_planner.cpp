@@ -3,7 +3,13 @@
 using std::vector;
 using std::sort;
 
-RoutePlanner::RoutePlanner(RouteModel &model, float start_x, float start_y, float end_x, float end_y): m_Model(model) {
+//
+// Define methods in RoutePlanner class.
+//
+
+RoutePlanner::RoutePlanner(RouteModel &model, float start_x, float start_y, 
+                           float end_x, float end_y): m_Model(model) {
+
   // Rescale coordinates between 0 and 1.
   start_x *= 0.01;
   start_y *= 0.01;
@@ -26,8 +32,12 @@ vector<RouteModel::Node> RoutePlanner::ConstructFinalPath(RouteModel::Node* curr
     distance += current_node->distance(*(current_node->parent));
     current_node = current_node->parent;
   }
+  // Add the start node to path_found.
   path_found.push_back(*current_node);
+
+  // Adjust the distance to fit the model's scale.
   distance *= m_Model.MetricScale();
+
   return path_found;
 }
 
@@ -38,13 +48,14 @@ void RoutePlanner::AStarSearch() {
   RouteModel::Node* current_node = nullptr;
   
   while(open_list.size() > 0) {
+    // Get the next node to go from open_list according to the f-value.
     current_node = NextNode();
+
     if(current_node->distance(*end_node) == 0) {
       // When getting to the end node, set path and return.
       m_Model.path = ConstructFinalPath(current_node);
       return;
-    } 
-    else {
+    } else {
       // Add neighbors to open_list.
       AddNeighbors(current_node);
     }
@@ -65,8 +76,10 @@ bool comp_fvalue(RouteModel::Node* n1, RouteModel::Node* n2) {
 RouteModel::Node* RoutePlanner::NextNode() {
   // Sort open_list vector by f-value(= g-value + h-value).
   sort(open_list.begin(), open_list.end(), comp_fvalue);
+
   // Save the pointer to the node with the lowest f-value.
   RouteModel::Node* lowest = open_list[0];
+
   // Delete the first element from open_list.
   open_list.erase(open_list.begin());
   
