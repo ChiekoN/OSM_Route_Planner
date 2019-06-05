@@ -77,11 +77,31 @@ void RouteModel::Node::FindNeighbors() {
   // Get the closest node on each road and store them in this->neighbors.
   for(const Model::Road* road : roads) {
     vector<int> nodes_on_road = parent_model->Ways()[road->way].nodes;
-    RouteModel::Node* closest_on_road = FindNeighbor(nodes_on_road);
 
-    if (closest_on_road != nullptr) {
-      this->neighbors.push_back(closest_on_road);
+    // Get the current node in the road and set the previous node 
+    //  and next node as neighbors.
+    for(int i = 0; i < nodes_on_road.size(); i++) {
+      RouteModel::Node &node = parent_model->SNodes()[nodes_on_road[i]];
+      if(node.index == this->index) {
+
+        // Push back the previous node to neighbors if it hasn't been visited. 
+        if(i > 0 && parent_model->SNodes()[nodes_on_road[i-1]].visited == false) {
+          this->neighbors.push_back(&parent_model->SNodes()[nodes_on_road[i-1]]);
+
+        // Push back the next node to neighbors if it hasn't been visited.
+        } else if((i < nodes_on_road.size() - 1) &&
+                parent_model->SNodes()[nodes_on_road[i+1]].visited == false) {
+            this->neighbors.push_back(&parent_model->SNodes()[nodes_on_road[i+1]]);
+        }
+        break;
+      }
     }
+   
+    // RouteModel::Node* closest_on_road = FindNeighbor(nodes_on_road);
+
+    // if (closest_on_road != nullptr) {
+    //   this->neighbors.push_back(closest_on_road);
+    //}
   }
   // DEBUG
   std::cout << " >>> FindNeighbors : size of neighbors = " << this->neighbors.size() << "\n" ;
