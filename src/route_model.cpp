@@ -89,7 +89,8 @@ void RouteModel::Node::FindNeighbors() {
           this->neighbors.push_back(&parent_model->SNodes()[nodes_on_road[i-1]]);
 
         // Push back the next node to neighbors if it hasn't been visited.
-        } else if((i < nodes_on_road.size() - 1) &&
+        } 
+        if((i < nodes_on_road.size() - 1) &&
                 parent_model->SNodes()[nodes_on_road[i+1]].visited == false) {
             this->neighbors.push_back(&parent_model->SNodes()[nodes_on_road[i+1]]);
         }
