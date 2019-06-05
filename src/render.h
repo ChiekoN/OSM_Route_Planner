@@ -28,7 +28,9 @@ private:
     io2d::interpreted_path PathFromWay(const Model::Way &way) const;
     io2d::interpreted_path PathFromMP(const Model::Multipolygon &mp) const;
     io2d::interpreted_path PathLine() const;
-
+    // Chieko
+    void DrawNodes(io2d::output_surface &surface) const;
+    void DrawStartNeighbors(io2d::output_surface &surface) const;
     
     RouteModel &m_Model;
     float m_Scale = 1.f;

@@ -47,18 +47,26 @@ void RoutePlanner::AStarSearch() {
   open_list.push_back(start_node);
   RouteModel::Node* current_node = nullptr;
   
+  int n_num = 0;
   while(open_list.size() > 0) {
     // Get the next node to go from open_list according to the f-value.
     current_node = NextNode();
+    // DEBUG
+    std::cout << "Node [" << n_num << "] : " ;
+    std::cout << "   g-value = " << current_node->g_value;
+    std::cout << "   h-value = " << current_node->h_value << "\n";
 
     if(current_node->distance(*end_node) == 0) {
       // When getting to the end node, set path and return.
       m_Model.path = ConstructFinalPath(current_node);
       return;
+
     } else {
       // Add neighbors to open_list.
       AddNeighbors(current_node);
     }
+    
+    n_num++;
   }
 }
   
@@ -77,11 +85,17 @@ RouteModel::Node* RoutePlanner::NextNode() {
   // Sort open_list vector by f-value(= g-value + h-value).
   sort(open_list.begin(), open_list.end(), comp_fvalue);
 
+  // DEBUG:
+  std::cout << " >>> NextNode: " << "open_list size = " << open_list.size() ;
+  std::cout << " g-value = " << open_list[0]->g_value << ", h-value = " << open_list[0]->h_value << "\n" ;
+  
+
   // Save the pointer to the node with the lowest f-value.
   RouteModel::Node* lowest = open_list[0];
 
   // Delete the first element from open_list.
   open_list.erase(open_list.begin());
+  //open_list.clear();
   
   return lowest;
 }

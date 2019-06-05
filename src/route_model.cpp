@@ -48,12 +48,18 @@ RouteModel::Node* RouteModel::Node::FindNeighbor(vector<int> node_indices) {
   
   RouteModel::Node* closest_node = nullptr;
   
+  // DEBUG
+  std::cout << " FindNeighbor ! node_indices.size() = " << node_indices.size() << "\n";
+  
   // Search the closest node to <this> from nodes of node_indices.
   for(int n_idx : node_indices) {
     Node &node = parent_model->SNodes()[n_idx];
 
     // Find the closest node that hasn't been visited and that isn't itself.
     if( (!node.visited) && (node.distance(*this) != 0)) {
+
+      // DEBUG
+      // std::cout << " >>> FindNeighbor : node = " << node.index << "\n";
       if((closest_node == nullptr) ||
          (closest_node->distance(*this) > node.distance(*this))) {
         closest_node = &node;
@@ -70,7 +76,6 @@ void RouteModel::Node::FindNeighbors() {
   
   // Get the closest node on each road and store them in this->neighbors.
   for(const Model::Road* road : roads) {
-
     vector<int> nodes_on_road = parent_model->Ways()[road->way].nodes;
     RouteModel::Node* closest_on_road = FindNeighbor(nodes_on_road);
 
@@ -78,6 +83,8 @@ void RouteModel::Node::FindNeighbors() {
       this->neighbors.push_back(closest_on_road);
     }
   }
+  // DEBUG
+  std::cout << " >>> FindNeighbors : size of neighbors = " << this->neighbors.size() << "\n" ;
 }
 
 RouteModel::Node &RouteModel::FindClosestNode(float x, float y) {
