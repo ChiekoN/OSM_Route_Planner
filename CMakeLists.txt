@@ -26,8 +26,6 @@ set(LIBRARY_OUTPUT_PATH "${MAINFOLDER}/lib")
 # Locate Project Prerequisites
 #
 
-### Chieko added
-#set(io2d_DIR "~/Installs/P0267_RefImpl/Debug/P0267_RefImpl/P0267_RefImpl/CMakeFiles/Export/lib/cmake/io2d")
 find_package(io2d REQUIRED)
 find_package(Cairo)
 find_package(GraphicsMagick)
