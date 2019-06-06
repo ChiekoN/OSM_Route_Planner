@@ -28,59 +28,8 @@ void Render::Display( io2d::output_surface &surface )
     DrawHighways(surface);    
     DrawBuildings(surface);  
     DrawPath(surface);
-
-    DrawNodes(surface); //Chieko
-
     DrawStartPosition(surface);   
     DrawEndPosition(surface);
-
-    DrawStartNeighbors(surface); //Chieko
-    }
-
-// Chieko *****
-void Render::DrawNodes(io2d::output_surface &surface) const {
-    int node_num = m_Model.path.size();
-
-    io2d::render_props aliased{ io2d::antialias::none };
-    io2d::brush foreBrush{ io2d::rgba_color::black };
-
-    for(int i = 0; i < node_num; i++) {
-        auto pb = io2d::path_builder{}; 
-        pb.matrix(m_Matrix);
-
-        pb.new_figure({(float) m_Model.path[i].x, (float) m_Model.path[i].y});
-        float constexpr l_marker = 0.01f;
-        pb.rel_line({l_marker, 0.f});
-        pb.rel_line({0.f, l_marker});
-        pb.rel_line({-l_marker, 0.f});
-        pb.rel_line({0.f, -l_marker});
-        pb.close_figure();
-    
-        surface.fill(foreBrush, pb);
-        surface.stroke(foreBrush, io2d::interpreted_path{pb}, std::nullopt, std::nullopt, std::nullopt, aliased);
-    }
-}
-void Render::DrawStartNeighbors(io2d::output_surface &surface) const {
-    vector<RouteModel::Node *> s_neighbors = m_Model.path.back().neighbors;
-
-    io2d::render_props aliased{ io2d::antialias::none };
-    io2d::brush foreBrush{ io2d::rgba_color::blue };
-
-    for(int i = 0; i < s_neighbors.size(); i++) {
-        auto pb = io2d::path_builder{}; 
-        pb.matrix(m_Matrix);
-
-        pb.new_figure({(float) s_neighbors[i]->x, (float) s_neighbors[i]->y});
-        float constexpr l_marker = 0.01f;
-        pb.rel_line({l_marker, 0.f});
-        pb.rel_line({0.f, l_marker});
-        pb.rel_line({-l_marker, 0.f});
-        pb.rel_line({0.f, -l_marker});
-        pb.close_figure();
-    
-        surface.fill(foreBrush, pb);
-        surface.stroke(foreBrush, io2d::interpreted_path{pb}, std::nullopt, std::nullopt, std::nullopt, aliased);
-    }
 }
 
 void Render::DrawPath(io2d::output_surface &surface) const{
