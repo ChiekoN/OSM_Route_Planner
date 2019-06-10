@@ -27,19 +27,21 @@ static std::optional<std::vector<std::byte>> ReadFile(const std::string &path)
     return std::move(contents);
 }
 
-float GetUserInput(std::string vname) {
+static float GetUserInput(std::string vname) {
+
   float input ;
-  while(true) {
-    std::cout << " - " << vname << " -> " ;
-    std::cin >> input ;
-    //std::cout << "\n";
-    if (input >= 0.0 && input <= 100.0) {
-      return input;
-    }
-    else {
+
+  std::cout << vname << " -> " ;
+  std::cin >> input ;
+
+  while(!(std::cin) || input < 0.0 || input > 100.0) {
       std::cout << "ERROR: Input should be between 0 and 100. Try again.\n";
-    }
+      std::cin.clear();
+      std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+      std::cout << vname << " -> " ;
+      std::cin >> input ;
   }
+  return input;
 }  
 
 int main(int argc, const char **argv)
@@ -73,7 +75,8 @@ int main(int argc, const char **argv)
     float end_x;
     float end_y;
   
-    std::cout << "\nEnter coordinates of the starting point and the ending point below (0 to 100)." << "\n";
+    std::cout << "\nEnter coordinates of the start and the goal below (0 to 100)." << "\n";
+    std::cout << "Press RETURN after input each value." << "\n";
     start_x = GetUserInput("Starting point x");
     start_y = GetUserInput("Starting point y");
     end_x = GetUserInput("Ending point x");
